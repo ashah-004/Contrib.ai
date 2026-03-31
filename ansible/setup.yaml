@@ -1,0 +1,25 @@
+---
+- name: Configure Agent VM
+  hosts: agent_vm
+  become: yes
+
+  tasks:
+    - name: update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Git and Python tools
+      apt: 
+        name:
+          - git
+          - python3-pip
+          - python3-venv
+        state: present
+
+    - name: Clone contrib.ai repository
+      git:
+        repo: 'https://github.com/ashah-004/Contrib.ai.git'
+        dest: /home/{{ ansible_user }}/contrib.ai
+        version: main
+      become: no
